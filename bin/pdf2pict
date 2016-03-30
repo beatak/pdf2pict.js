@@ -1,0 +1,71 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var minimist = require('minimist');
+var shell = require('shelljs');
+
+var ARGV = minimist(
+    process.argv.slice(2),
+    {
+        boolean: ['r'],
+        string: [],
+        'default': {
+            r: false
+        }
+    }
+);
+var DIR_CWD = process.cwd();
+
+var pdf_files,
+    pdf_files_pointer = 0;
+
+var is_pdf = function (str) {
+    return path.extname(str) === '.pdf';
+};
+
+var iterate_pdf_files = function () {
+    var mypath = pdf_files[pdf_files_pointer];
+    ++pdf_files_pointer;
+    if (mypath) {
+        run_pdfimages(mypath);
+    }
+    else {
+        console.log('done!');
+    }
+};
+
+var run_pdfimages = function (mypath) {
+    var dirname = path.dirname(mypath);
+    var basename = path.basename(mypath, '.pdf');
+    var command = ['pdfimages -all ', mypath, ' ', path.join(dirname, basename)].join('');
+    shell.exec(
+        command,
+        function (code, stdout, stderr) {
+            if (0 !== code) {
+                console.error('Failed to process: ' + mypath);
+                if (stderr) {
+                    console.error(stderr);
+                }
+            }
+            iterate_pdf_files();
+        }
+    );
+};
+
+// ===============================================
+
+if (ARGV.r) {
+    pdf_files = shell.find(DIR_CWD).filter(is_pdf);
+}
+else {
+    pdf_files = [];
+    shell.ls(DIR_CWD).forEach(function (mypath) {
+        var fullpath = path.join(DIR_CWD, mypath);
+        if (is_pdf(fullpath)) {
+            pdf_files.push(fullpath);
+        }
+    });
+}
+
+iterate_pdf_files();
+

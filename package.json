@@ -1,0 +1,28 @@
+{
+    "name": "pdf2pict.js",
+    "version": "0.0.1",
+    "description": "a better commandline interface for pdfimages from http://poppler.freedesktop.org",
+    "bin": {
+        "pdf2pict" : "bin/pdf2pict"
+    },
+    "scripts": {
+        "test": "echo \"say a little prayer\" && exit 0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/beatak/pdf2pict.js.git"
+    },
+    "author": "Takashi Mizohata <beatak@gmail.com> (http://github.com/beatak)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/beatak/pdf2pict.js/issues"
+    },
+    "homepage": "https://github.com/beatak/pdf2pict.js#readme",
+    "dependencies": {
+        "minimist": "1.2.0",
+        "shelljs": "0.6.0"
+    },
+    "devDependencies": {
+        "mocha": "2.4.5"
+    }
+}
